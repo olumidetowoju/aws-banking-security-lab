@@ -1,4 +1,4 @@
-# Lab 01 – Secure Customer Account API\n\Scaffold placeholder for Lab 01.
+# Lab 01 – Secure Customer Account API
 
 In this lab you will build the first component of the AWS Banking Security Lab:  
 a **customer-facing `/accounts` API** protected by **Amazon Cognito** and served through **Amazon API Gateway**, backed by a **Lambda microservice**.
