@@ -63,7 +63,7 @@ Verify AWS CLI:
 aws sts get-caller-identity
 
 # 🔐 4. Create the Cognito User Pool
-4.1 Create a new User Pool
+## 4.1 Create a new User Pool
 
 AWS Console → Amazon Cognito → Create User Pool
 
@@ -75,7 +75,7 @@ Password policy	Default
 
 Create the pool and note the User Pool ID.
 
-4.2 Create an App Client
+## 4.2 Create an App Client
 
 Inside the pool:
 
@@ -107,7 +107,7 @@ https://example.com/logout
 
 Save and note the Client ID.
 
-4.3 Create a test user
+## 4.3 Create a test user
 
 Inside the pool:
 
@@ -123,7 +123,7 @@ Set a password
 
 We build a simple Lambda returning fake banking accounts.
 
-5.1 Create IAM role for Lambda
+## 5.1 Create IAM role for Lambda
 
 Create trust policy:
 
@@ -154,7 +154,7 @@ aws iam attach-role-policy \
   --role-name banking-lambda-execution-role \
   --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 
-5.2 Create Lambda source code
+## 5.2 Create Lambda source code
 mkdir -p lambda-src
 cat > lambda-src/app.py << 'EOF2'
 import json
@@ -178,7 +178,7 @@ cd lambda-src
 zip function.zip app.py
 cd ..
 
-5.3 Deploy Lambda
+## 5.3 Deploy Lambda
 aws lambda create-function \
   --function-name banking-get-accounts \
   --runtime python3.11 \
@@ -187,7 +187,7 @@ aws lambda create-function \
   --zip-file fileb://lambda-src/function.zip
 
 # 🌐 6. Create the API Gateway Endpoint
-6.1 Create the API
+## 6.1 Create the API
 aws apigatewayv2 create-api \
   --name "Banking Accounts API" \
   --protocol-type HTTP \
@@ -198,19 +198,19 @@ Save the returned ApiId:
 
 export API_ID=<api-id>
 
-6.2 Add /accounts route
+## 6.2 Add /accounts route
 aws apigatewayv2 create-route \
   --api-id $API_ID \
   --route-key "GET /accounts" \
   --target "integrations/$(aws apigatewayv2 get-routes --api-id $API_ID --query 'Items[0].Target' --
 
 # 🔒 7. Secure the API with Cognito
-7.1 Get Cognito details
+## 7.1 Get Cognito details
 export USER_POOL_ID=<your-user-pool-id>
 export USER_POOL_CLIENT_ID=<your-client-id>
 export COGNITO_ISSUER="https://cognito-idp.us-east-2.amazonaws.com/$USER_POOL_ID"
 
-7.2 Create JWT Authorizer
+## 7.2 Create JWT Authorizer
 aws apigatewayv2 create-authorizer \
   --api-id $API_ID \
   --authorizer-type JWT \
@@ -223,7 +223,7 @@ Capture the authorizer ID:
 
 export AUTHORIZER_ID=<value>
 
-7.3 Apply authorizer to /accounts
+## 7.3 Apply authorizer to /accounts
 
 Find the route ID:
 
@@ -248,7 +248,7 @@ Deploy:
 aws apigatewayv2 create-deployment --api-id $API_ID
 
 # 🔑 8. Get a Token & Test the API
-8.1 Authenticate and obtain token
+## 8.1 Authenticate and obtain token
 aws cognito-idp initiate-auth \
   --auth-flow USER_PASSWORD_AUTH \
   --client-id $USER_POOL_CLIENT_ID \
@@ -259,7 +259,7 @@ Extract the IdToken:
 
 export ID_TOKEN=<paste-token-here>
 
-8.2 Call your API
+## 8.2 Call your API
 
 Get the API URL:
 
