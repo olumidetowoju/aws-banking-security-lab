@@ -1,4 +1,4 @@
-# 03 – AWS Regulatory Controls: PCI, Open Banking & FSI Lens
+# 03 – AWS Regulatory Controls: PCI, 
 
 ## 3.1 Thinking Like an Auditor
 
