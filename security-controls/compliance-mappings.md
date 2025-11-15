@@ -1,3 +1,1 @@
-# Compliance Mappings (PCI, FSI, Open Banking)
-
-_Placeholder for mapping implemented controls to regulatory frameworks._
+# Compliance Mappings (PCI, FSI Lens, Open Banking)\n\nScaffold placeholder for compliance mappings.

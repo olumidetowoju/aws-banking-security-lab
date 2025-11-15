@@ -1,3 +1,1 @@
-# KMS Encryption & Key Policies
-
-_Placeholder for KMS key policies and grants._
+# KMS Encryption & Key Policies\n\nScaffold placeholder for KMS controls.

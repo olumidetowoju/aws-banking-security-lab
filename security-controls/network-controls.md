@@ -1,3 +1,1 @@
-# Network Controls (VPC, Security Groups, NACLs, WAF)
-
-_Placeholder for network security patterns and examples._
+# Network Controls (VPC, SG, NACL, WAF)\n\nScaffold placeholder for network security.

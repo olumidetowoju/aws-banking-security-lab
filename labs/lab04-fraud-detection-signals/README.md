@@ -1,3 +1,1 @@
-# Lab 04 – Fraud Detection Signals
-
-_Hands‑on step‑by‑step instructions will be added here. This file acts as the lab manual for **Lab 04 – Fraud Detection Signals**._
+# Lab 04 – Fraud Detection Signals\n\nScaffold placeholder for Lab 04.

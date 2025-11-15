@@ -1,3 +1,1 @@
-# IAM Policies for Banking APIs
-
-_Placeholder for IAM example policies used across labs._
+# IAM Policies for Banking APIs\n\nScaffold placeholder for IAM patterns.
