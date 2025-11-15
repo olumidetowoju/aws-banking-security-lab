@@ -63,29 +63,30 @@ Use this README as your **living directory**.
 
 ```mermaid
 flowchart TD
-  subgraph Clients
-    C1[Customer Mobile / Web App]
-    C2[Third‑Party Fintech (TPP)]
-  end
+subgraph CLIENTS
+  C1[Customer App]
+  C2[Fintech TPP]
+end
 
-  C1 -->|TLS + OAuth2| APIGW[(Amazon API Gateway)]
-  C2 -->|mTLS + OAuth2 Client Credentials| APIGW
+C1 --> APIGW
+C2 --> APIGW
 
-  APIGW --> Auth[Cognito JWT Authorizer]
-  Auth --> L1[Lambda - Customer APIs]
-  Auth --> L2[Lambda - Payments & Tokens]
+APIGW --> AUTHZ
+AUTHZ --> L1[Lambda Customer APIs]
+AUTHZ --> L2[Lambda Payments]
 
-  L2 --> DDB[(DynamoDB Token Vault)]
-  L2 --> KMS[KMS CMK]
+L2 --> DDB[Token Vault]
+L2 --> KMS[KMS CMK]
 
-  APIGW --> Logs[API Access Logs]
-  L1 --> CWLogs[CloudWatch Logs]
-  L2 --> CWLogs
+APIGW --> APILOGS
+L1 --> CWLOGS
+L2 --> CWLOGS
 
-  Logs --> CT[CloudTrail / CloudTrail Lake]
-  CWLogs --> CT
-  CT --> Athena[Athena Queries]
-  Athena --> Reports[Compliance & Audit Reports]
+APILOGS --> TRAIL
+CWLOGS --> TRAIL
+
+TRAIL --> ATHENA[Athena Queries]
+ATHENA --> REPORTS[Compliance Reports]
 ```
 
 ---
