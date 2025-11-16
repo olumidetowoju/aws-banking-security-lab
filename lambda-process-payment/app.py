@@ -7,11 +7,29 @@ ddb = boto3.resource("dynamodb")
 
 KMS_ARN = os.environ["KMS_ARN"]
 TABLE_NAME = os.environ["TABLE_NAME"]
+TPP_CLIENT_ID = os.environ.get("TPP_CLIENT_ID")  # allowed TPP client
+
 table = ddb.Table(TABLE_NAME)
 
 
 def lambda_handler(event, context):
     try:
+        # --- Authorization check: only TPP client with correct scope can call /payments ---
+        auth_context = event.get("requestContext", {}).get("authorizer", {}).get("jwt", {})
+        claims = auth_context.get("claims", {})
+
+        client_id = claims.get("client_id") or claims.get("clientId")
+        scope_str = claims.get("scope", "") or claims.get("scp", "")
+
+        scopes = scope_str.split() if scope_str else []
+
+        if client_id != TPP_CLIENT_ID or "payments-api/payments.tpp" not in scopes:
+            return {
+                "statusCode": 403,
+                "body": "Forbidden: TPP-only payments endpoint."
+            }
+
+        # --- Business logic: detokenize and process payment ---
         body = json.loads(event.get("body") or "{}")
         token = body.get("token")
         amount = body.get("amount")
