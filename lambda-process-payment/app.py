@@ -4,6 +4,7 @@ import boto3
 
 kms = boto3.client("kms")
 ddb = boto3.resource("dynamodb")
+events = boto3.client("events")
 
 KMS_ARN = os.environ["KMS_ARN"]
 TABLE_NAME = os.environ["TABLE_NAME"]
@@ -20,7 +21,6 @@ def lambda_handler(event, context):
 
         client_id = claims.get("client_id") or claims.get("clientId")
         scope_str = claims.get("scope", "") or claims.get("scp", "")
-
         scopes = scope_str.split() if scope_str else []
 
         if client_id != TPP_CLIENT_ID or "payments-api/payments.tpp" not in scopes:
@@ -63,6 +63,24 @@ def lambda_handler(event, context):
             "amount": amount,
             "status": "APPROVED"
         }
+
+        # --- Emit PaymentEvent to EventBridge for fraud analysis ---
+        try:
+            events.put_events(
+                Entries=[
+                    {
+                        "Source": "bank.payments",
+                        "DetailType": "PaymentEvent",
+                        "Detail": json.dumps({
+                            "token": token,
+                            "amount": amount
+                        })
+                    }
+                ]
+            )
+        except Exception as e:
+            # We do not fail the payment if event emission fails; we just log it.
+            print(f"Failed to emit PaymentEvent: {e}")
 
         return {
             "statusCode": 200,
